@@ -20,17 +20,20 @@
         </activity>
         <activity android:name=".DetailActivity"
                   android:label="@string/title_activity_detail"
-                  android:parentActivityName=".MainActivity" />
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.example.savagavran.sunshine.MainActivity" />
-
+                  android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.savagavran.sunshine.MainActivity" />
+        </activity>
         <activity android:name=".SettingsActivity"
                   android:label="@string/title_activity_settings"
-                  android:parentActivityName=".MainActivity" />
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.example.savagavran.sunshine.MainActivity" />
+                  android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.savagavran.sunshine.MainActivity" />
+        </activity>
+        <provider
+            android:authorities="com.example.android.sunshine.app"
+            android:name=".data.WeatherProvider" />
     </application>
-
 </manifest>
