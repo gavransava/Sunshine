@@ -11,14 +11,16 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback{
 
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
+    private final int REQUEST_SETTING = 0;
     private String mLocation;
     private boolean mTwoPane;
+    private boolean mUnitChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLocation = Utility.getPreferredLocation(this);
-
+        mUnitChanged = Utility.isMetric(this);
         setContentView(R.layout.activity_main);
         if (findViewById(R.id.weather_detail_container) != null) {
             // The detail container view will be present only in the large-screen layouts
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivityForResult(new Intent(this, SettingsActivity.class), REQUEST_SETTING);
             return true;
         }
         if (id == R.id.action_map) {
@@ -122,6 +124,23 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             Intent intent = new Intent(this, DetailActivity.class)
                     .setData(contentUri);
             startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode != RESULT_OK)
+            return;
+
+        if(requestCode == REQUEST_SETTING) {
+            if(mUnitChanged != data.getBooleanExtra(SettingsActivity.UNIT_RESULT, true)){
+                mUnitChanged = data.getBooleanExtra(SettingsActivity.UNIT_RESULT, true);
+                ForecastFragment forecastFragment =  ((ForecastFragment)getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment_forecast));
+                forecastFragment.onUnitChanged();
+            }
         }
     }
 }

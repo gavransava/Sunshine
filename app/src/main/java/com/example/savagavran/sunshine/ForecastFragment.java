@@ -1,5 +1,6 @@
 package com.example.savagavran.sunshine;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.savagavran.sunshine.data.WeatherContract;
+import com.example.savagavran.sunshine.service.SunshineService;
 
 public class ForecastFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>{
@@ -28,6 +30,7 @@ public class ForecastFragment extends Fragment
     private boolean mUseTodayLayout;
 
     private static final String SELECTED_KEY = "selected_position";
+    private static final String SUNSHINE_SERVICE = "sunshine_service";
 
     private static final int FORECAST_LOADER = 0;
 
@@ -193,10 +196,16 @@ public class ForecastFragment extends Fragment
         getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
+    void onUnitChanged( ) {
+        updateWeather();
+        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
+    }
+
     private void updateWeather() {
-        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
-        String location = Utility.getPreferredLocation(getActivity());
-        weatherTask.execute(location);
+        Intent intent = new Intent(getActivity(), SunshineService.class);
+        intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
+                Utility.getPreferredLocation(getActivity()));
+        getActivity().startService(intent);
     }
 
     @Override
