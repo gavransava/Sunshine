@@ -1,9 +1,5 @@
 package com.example.savagavran.sunshine;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,8 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.savagavran.sunshine.data.WeatherContract;
-import com.example.savagavran.sunshine.service.SunshineService;
-import com.example.savagavran.sunshine.service.SunshineService.AlarmReceiver;
+import com.example.savagavran.sunshine.sync.SunshineSyncAdapter;
 
 public class ForecastFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>{
@@ -207,12 +202,7 @@ public class ForecastFragment extends Fragment
     }
 
     private void updateWeather() {
-        Intent alarmIntent = new Intent(getActivity(), AlarmReceiver.class);
-        alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(getActivity()));
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager alarmMgr = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-
-        alarmMgr.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + FIVE_SECONDS, pendingIntent);
+        SunshineSyncAdapter.syncImmediately(getActivity());
     }
 
     @Override
