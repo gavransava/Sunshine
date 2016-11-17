@@ -42,7 +42,7 @@
                 android:value="com.example.savagavran.sunshine.MainActivity" />
         </activity>
         <provider
-            android:authorities="com.example.savagavran.sunshine.app"
+            android:authorities="@string/content_authority"
             android:name=".data.WeatherProvider"
             android:exported="false"
             android:syncable="true"/>
