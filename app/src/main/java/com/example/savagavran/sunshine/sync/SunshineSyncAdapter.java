@@ -321,7 +321,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         long lastSync = prefs.getLong(lastNotificationKey, 0);
 
         String weatherNotification = context.getString(R.string.pref_enable_notifications_key);
-        boolean notifyMe = prefs.getBoolean(weatherNotification, false);
+        boolean notifyMe = prefs.getBoolean(weatherNotification, true);
 
         if (System.currentTimeMillis() - lastSync >= DAY_IN_MILLIS  && notifyMe) {
             // Last sync was more than 1 day ago, let's send a notification with the weather.
