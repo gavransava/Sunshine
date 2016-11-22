@@ -176,8 +176,6 @@ public class ForecastFragment extends Fragment
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
         }
 
-        mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
-
         return rootView;
     }
 
