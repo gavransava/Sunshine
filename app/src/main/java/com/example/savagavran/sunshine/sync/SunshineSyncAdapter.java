@@ -31,6 +31,8 @@ import com.example.savagavran.sunshine.Utility;
 import com.example.savagavran.sunshine.data.WeatherContract;
 import com.example.savagavran.sunshine.data.WeatherListItem;
 import com.example.savagavran.sunshine.data.WeatherResponse;
+import com.example.savagavran.sunshine.sync.error.APIError;
+import com.example.savagavran.sunshine.sync.error.ErrorUtils;
 
 import java.util.List;
 import java.util.Vector;
@@ -92,10 +94,15 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             call.enqueue(new Callback<WeatherResponse>() {
                 @Override
                 public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
-
-                    List<WeatherListItem> weather = response.body().getResults();
-                    Log.d(LOG_TAG, "Number of weather days received: " + weather.size());
-                    writeToDatabase(response);
+                    if(response.isSuccessful()) {
+                        List<WeatherListItem> weather = response.body().getResults();
+                        Log.d(LOG_TAG, "Number of weather days received: " + weather.size());
+                        writeToDatabase(response);
+                    } else {
+                        APIError error = ErrorUtils.parseError(response);
+                        Log.d(LOG_TAG, error.getMessage());
+                        showRetry(error.getMessage());
+                    }
                 }
 
                 @Override
@@ -107,6 +114,10 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         } catch (Exception e) {
             Log.e(LOG_TAG, "Error ", e);
         }
+    }
+
+    private void showRetry(String error) {
+
     }
 
     private void writeToDatabase(Response<WeatherResponse> weather){

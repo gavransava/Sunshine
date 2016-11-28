@@ -15,7 +15,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.savagavran.sunshine.data.WeatherContract;
@@ -31,6 +35,8 @@ public class ForecastFragment extends Fragment
     private int mPosition = ListView.INVALID_POSITION;
     private boolean mUseTodayLayout;
 
+    private ImageView mRetryButton;
+    private LinearLayout mRetryLayout;
     private static final String SELECTED_KEY = "selected_position";
     private static final String SUNSHINE_SERVICE = "sunshine_service";
 
@@ -120,7 +126,11 @@ public class ForecastFragment extends Fragment
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
         mForecastAdapter.swapCursor(data);
+        if(data.getCount() != 0)
+            mRetryLayout.setVisibility(View.GONE);
+
         if (mPosition != ListView.INVALID_POSITION) {
             // If we don't need to restart the loader, and there's a desired position to restore
             // to, do so now.
@@ -152,6 +162,20 @@ public class ForecastFragment extends Fragment
         // Get a reference to the ListView, and attach this adapter to it.
         mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
         mListView.setAdapter(mForecastAdapter);
+        mRetryLayout = (LinearLayout) rootView.findViewById(R.id.retry_layout);
+
+        mRetryButton = (ImageView) rootView.findViewById(R.id.button_retry);
+        mRetryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RotateAnimation rotateAnimation = new RotateAnimation(0, 360,
+                        Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                rotateAnimation.setDuration(2000);
+                mRetryButton.startAnimation(rotateAnimation);
+                SunshineSyncAdapter.syncImmediately(getActivity());
+            }
+        });
+
 
         // We'll call our MainActivity
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.example.savagavran.sunshine.ForecastFragment">
-    <ListView
-        style="@style/ForecastListStyle"
-        android:id="@+id/listview_forecast"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null" />
-</FrameLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.example.savagavran.sunshine.ForecastFragment">
+
+    <ListView android:id="@+id/listview_forecast"
+              style="@style/ForecastListStyle"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:divider="@null"/>
+
+    <LinearLayout android:id="@+id/retry_layout"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <ImageView android:id="@+id/button_retry"
+                   android:background="@android:color/transparent"
+                   android:src="@drawable/ic_refresh"
+                   android:layout_width="80dp"
+                   android:layout_height="80dp"
+                   android:adjustViewBounds="true"
+                   android:scaleType="fitXY"/>
+
+        <TextView
+            android:text="@string/refresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="24sp"
+            tools:text="@string/refresh"/>
+    </LinearLayout>
+</RelativeLayout>
