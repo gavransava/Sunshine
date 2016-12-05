@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.database.Cursor;
+import android.net.TrafficStats;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.format.Time;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.savagavran.sunshine.BuildConfig;
 import com.example.savagavran.sunshine.MainActivity;
@@ -79,6 +81,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         String format = "json";
         String units = "metric";
         int numDays = 14;
+        TrafficStats.setThreadStatsTag(0xF00D);
 
         try {
             ApiInterface apiService =
@@ -99,7 +102,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                         Log.d(LOG_TAG, "Number of weather days received: " + weather.size());
                         writeToDatabase(response);
                     } else {
-                        APIError error = ErrorUtils.parseError(response);
+                        APIError error = ErrorUtils.parseError(response.errorBody());
                         Log.d(LOG_TAG, error.getMessage());
                         showRetry(error.getMessage());
                     }
@@ -114,10 +117,11 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         } catch (Exception e) {
             Log.e(LOG_TAG, "Error ", e);
         }
+        TrafficStats.clearThreadStatsTag();
     }
 
     private void showRetry(String error) {
-
+        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
 
     private void writeToDatabase(Response<WeatherResponse> weather){
@@ -315,7 +319,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
         }
 
         locationCursor.close();
-        // Wait, that worked?  Yes!
+
         return locationId;
     }
 

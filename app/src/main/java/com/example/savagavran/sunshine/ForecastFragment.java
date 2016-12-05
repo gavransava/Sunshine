@@ -23,10 +23,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.savagavran.sunshine.data.WeatherContract;
+import com.example.savagavran.sunshine.presenter.Presenter;
 import com.example.savagavran.sunshine.sync.SunshineSyncAdapter;
 
 public class ForecastFragment extends Fragment
-        implements LoaderManager.LoaderCallbacks<Cursor>{
+        implements LoaderManager.LoaderCallbacks<Cursor>, Presenter.ForecastPresenter {
 
     public static final String LOG_TAG = ForecastFragment.class.getSimpleName();
     private ForecastAdapter mForecastAdapter;
@@ -41,6 +42,9 @@ public class ForecastFragment extends Fragment
     private static final String SUNSHINE_SERVICE = "sunshine_service";
 
     private static final int FORECAST_LOADER = 0;
+
+    //@Inject
+   // public ForecastMVP.PresenterOps  mForecastPresenter;
 
     // For the forecast view we're showing only a small subset of the stored data.
     // Specify the columns we need.
@@ -93,6 +97,9 @@ public class ForecastFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+       // DaggerForecastComponent.builder().activityModule(new ActivityModule(getActivity())).forecastFragmentModule(new ForecastFragmentModule(this)).build().inject(this);
+
     }
 
     @Override

@@ -6,11 +6,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.example.savagavran.sunshine.component.DaggerMainActivityComponent;
+import com.example.savagavran.sunshine.module.MainActivityModule;
+import com.example.savagavran.sunshine.presenter.Presenter;
 import com.example.savagavran.sunshine.sync.SunshineSyncAdapter;
 
+import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback{
+
+public class MainActivity extends AppCompatActivity
+        implements ForecastFragment.Callback, RequiredView.RequiredViewOps {
 
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
     private final int REQUEST_SETTING = 0;
@@ -18,12 +25,24 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     private boolean mTwoPane;
     private boolean mUnitChanged;
 
+    @Inject
+    public Presenter.MainPresenter.PresenterOps mMainPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLocation = Utility.getPreferredLocation(this);
         mUnitChanged = Utility.isMetric(this);
         setContentView(R.layout.activity_main);
+
+        DaggerMainActivityComponent
+                .builder()
+                .activityComponent(SunshineApp.getApp(this).getComponent())
+                .mainActivityModule(new MainActivityModule(this))
+                .build()
+                .inject(this);
+
+
         if (findViewById(R.id.weather_detail_container) != null) {
             // The detail container view will be present only in the large-screen layouts
             // (res/layout-sw600dp). If this view is present, then the activity should be
@@ -75,18 +94,15 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     @Override
     protected void onResume() {
         super.onResume();
-        String location = Utility.getPreferredLocation( this );
-        // update the location in our second pane using the fragment manager
-        if (location != null && !location.equals(mLocation)) {
+        if(mMainPresenter.hasLocationChanged(this)) {
             ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
-            if ( null != ff ) {
+            DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+            if ( null != ff & !mTwoPane) {
                 ff.onLocationChanged();
             }
-            DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
             if ( null != df ) {
-                df.onLocationChanged(location);
+                df.onLocationChanged();
             }
-            mLocation = location;
         }
     }
 
@@ -127,5 +143,9 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
                 forecastFragment.onUnitChanged();
             }
         }
+    }
+
+    public void setToast() {
+        Toast.makeText(this, "Test", Toast.LENGTH_SHORT).show();
     }
 }

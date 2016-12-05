@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.savagavran.sunshine.data.WeatherContract;
 import com.example.savagavran.sunshine.data.WeatherContract.WeatherEntry;
+import com.example.savagavran.sunshine.sync.SunshineSyncAdapter;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -132,8 +133,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         super.onActivityCreated(savedInstanceState);
     }
 
-    void onLocationChanged( String newLocation ) {
+    void onLocationChanged() {
         // replace the uri, since the location has changed
+        SunshineSyncAdapter.syncImmediately(getActivity());
+        String newLocation = Utility.getPreferredLocation(getActivity());
         Uri uri = mUri;
         if (null != uri) {
             long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
@@ -141,6 +144,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mUri = updatedUri;
             getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
         }
+
     }
 
     @Override

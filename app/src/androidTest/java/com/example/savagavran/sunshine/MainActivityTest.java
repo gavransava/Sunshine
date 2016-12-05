@@ -45,8 +45,6 @@ public class MainActivityTest extends InstrumentationTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        super.setUp();
-
         mockWebServer = new MockWebServer();
         mockWebServer.start();
 
@@ -83,7 +81,7 @@ public class MainActivityTest extends InstrumentationTestCase {
 
         ApiInterface service = retrofit.create(ApiInterface.class);
 
-        Call<WeatherResponse> call = service.getDailyWeatherData("1","1","1",0,"1");
+        Call<WeatherResponse> call = service.getDailyWeatherData("792680","json","metric",14,"2a8a37849fd28415152284ae4da09c42");
 
         MockResponse mockResponse = new MockResponse().setResponseCode(HttpURLConnection.HTTP_OK).setBody(quote_500_internal_error);
         mockWebServer.enqueue(mockResponse);

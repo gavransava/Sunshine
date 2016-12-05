@@ -1,31 +1,20 @@
 package com.example.savagavran.sunshine.sync.error;
 
-import com.example.savagavran.sunshine.sync.ApiClient;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import java.lang.annotation.Annotation;
-
 import okhttp3.ResponseBody;
-import retrofit2.Converter;
-import retrofit2.Response;
 
 public class ErrorUtils {
 
-    public static APIError parseError(Response<?> response) {
-        Converter<ResponseBody, APIError> converter = ApiClient.getClient()
-                .responseBodyConverter(APIError.class, new Annotation[0]);
+    public static APIError parseError(ResponseBody response) {
 
         APIError error = new APIError();
 
         try {
-            String json = new Gson().toJson(response);
-            JsonObject jsonObject = (JsonObject) new JsonParser().parse(json);
-            JsonObject networkResponseFull = jsonObject.getAsJsonObject("rawResponse").getAsJsonObject("networkResponse");
-
-            error.setCode(Integer.parseInt(networkResponseFull.get("code").toString()));
-            error.setMessage(networkResponseFull.get("message").toString());
+            String message = response.source().toString();
+            String code = message.substring(message.indexOf("\"cod\":")+7, message.indexOf("\"cod\":")+10);
+            int icode = Integer.parseInt(code);
+            error.setCode(icode);
+            String reason = message.substring(message.indexOf("message\":")+10, message.length()-3);
+            error.setMessage(reason);
         } catch (Exception e) {
             return new APIError();
         }
