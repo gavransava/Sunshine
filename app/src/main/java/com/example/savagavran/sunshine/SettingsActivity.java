@@ -1,100 +1,120 @@
 package com.example.savagavran.sunshine;
 
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ListView;
 
-/**
- * A {@link PreferenceActivity} that presents a set of application settings.
- * <p>
- * See <a href="http://developer.android.com/design/patterns/settings.html">
- * Android Design: Settings</a> for design guidelines and the <a
- * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
- * API Guide</a> for more information on developing a Settings UI.
- */
-public class SettingsActivity extends PreferenceActivity
-        implements Preference.OnPreferenceChangeListener {
+import com.example.savagavran.sunshine.component.DaggerSettingsActivityComponent;
+import com.example.savagavran.sunshine.module.SettingsActivityModule;
+import com.example.savagavran.sunshine.presenter.Presenter;
+
+import javax.inject.Inject;
+
+public class SettingsActivity extends AppCompatActivity
+        implements RequiredView.SettingsViewOps {
 
     private boolean mUnit;
     public static final String UNIT_RESULT = "unit_result";
 
+    private EditText mLocationEdit;
+    ListView mTemperatureUnits;
+    CheckBox mNotifications;
+
+    @Inject
+    public Presenter.SettingsPresenter mSettingsPresenter;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Add 'general' preferences, defined in the XML file
-        addPreferencesFromResource(R.xml.pref_general);
+        setContentView(R.layout.activity_settings);
+        mLocationEdit = (EditText) findViewById(R.id.location_edit);
+        mTemperatureUnits = (ListView) findViewById(R.id.temperature_units);
+        mNotifications = (CheckBox) findViewById(R.id.notification_enable);
 
-        // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
-        // updated when the preference changes.
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_enable_notifications_key)));
+        DaggerSettingsActivityComponent
+                .builder()
+                .activityComponent(SunshineApp.getApp(this).getComponent())
+                .settingsActivityModule(new SettingsActivityModule(this))
+                .build()
+                .inject(this);
+
+        wireEditText();
+        wireListView();
+        wireCheckBox();
+
+        mSettingsPresenter.getLocationValue(mSettingsPresenter);
+        mSettingsPresenter.getUnitValue(mSettingsPresenter);
+        mSettingsPresenter.getNotificationsValue(mSettingsPresenter);
     }
 
-    /**
-     * Attaches a listener so the summary is always updated with the preference value.
-     * Also fires the listener once, to initialize the summary (so it shows up before the value
-     * is changed.)
-     */
-    private void bindPreferenceSummaryToValue(Preference preference) {
-        // Set the listener to watch for value changes.
-        preference.setOnPreferenceChangeListener(this);
+    private void wireEditText() {
+        mLocationEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-        // Trigger the listener immediately with the preference's
-        // current value.
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
-        if(preference.getKey().equals(getString(R.string.pref_enable_notifications_key))){
-            onPreferenceChange(preference,
-                    PreferenceManager
-                            .getDefaultSharedPreferences(preference.getContext())
-                            .getBoolean(preference.getKey(), true));
-        } else {
-            onPreferenceChange(preference,
-                    PreferenceManager
-                            .getDefaultSharedPreferences(preference.getContext())
-                            .getString(preference.getKey(), ""));
-        }
-    }
-
-    @Override
-    public boolean onPreferenceChange(Preference preference, Object value) {
-        String stringValue = value.toString();
-
-        if (preference instanceof ListPreference) {
-            // For list preferences, look up the correct display value in
-            // the preference's 'entries' list (since they have separate labels/values).
-            ListPreference listPreference = (ListPreference) preference;
-            int prefIndex = listPreference.findIndexOfValue(stringValue);
-            if (prefIndex >= 0) {
-                preference.setSummary(listPreference.getEntries()[prefIndex]);
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() >= 6) {
+                    mSettingsPresenter.onLocationChanged(SettingsActivity.this, s.toString());
+                }
             }
-            mUnit = stringValue.equals("metric");
-        } else {
-            // For other preferences, set the summary to the value's simple string representation.
-            preference.setSummary(stringValue);
-        }
-        return true;
+        });
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void wireListView() {
+        mTemperatureUnits.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mSettingsPresenter.onUnitChanged(SettingsActivity.this, position);
+                mUnit = true; // temporary solution
+            }
+        });
+    }
+
+    private void wireCheckBox() {
+        mNotifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mSettingsPresenter.onNotificationsChange(SettingsActivity.this, isChecked);
+
+            }
+        });
+    }
+
     @Override
-    public Intent getParentActivityIntent() {
-        return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    public void updateNotifitacionSettingValue(boolean value) {
+        mNotifications.setChecked(value);
     }
 
+    @Override
+    public void updateUnitSettingValue(int value) {
+
+    }
+
+    @Override
+    public void updateLocationSettingValue(String value) {
+        mLocationEdit.setText(value);
+    }
 
     private void returnResult() {
         Intent intent = this.getIntent();
         intent.putExtra(UNIT_RESULT, mUnit);
         this.setResult(RESULT_OK, intent);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

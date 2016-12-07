@@ -20,6 +20,16 @@ public class ForecastAdapter extends CursorAdapter {
     private static final int VIEW_TYPE_TODAY = 0;
     private static final int VIEW_TYPE_FUTURE_DAY = 1;
 
+    // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
+    // must change.
+    static final int COL_WEATHER_ID = 0;
+    static final int COL_WEATHER_DATE = 1;
+    static final int COL_WEATHER_DESC = 2;
+    static final int COL_WEATHER_MAX_TEMP = 3;
+    static final int COL_WEATHER_MIN_TEMP = 4;
+    static final int COL_LOCATION_SETTING = 5;
+    static final int COL_WEATHER_CONDITION_ID = 6;
+
     private boolean mUseTodayLayout = true;
 
     /**
@@ -79,24 +89,24 @@ public class ForecastAdapter extends CursorAdapter {
             case VIEW_TYPE_TODAY: {
                 // Get weather icon
                 viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
-                        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+                        cursor.getInt(COL_WEATHER_CONDITION_ID)));
                 break;
             }
             case VIEW_TYPE_FUTURE_DAY: {
                 // Get weather icon
                 viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(
-                        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+                        cursor.getInt(COL_WEATHER_CONDITION_ID)));
                 break;
             }
         }
 
         // Read date from cursor
-        long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
+        long dateInMillis = cursor.getLong(COL_WEATHER_DATE);
         // Find TextView and set formatted date on it
         viewHolder.dateView.setText(Utility.getFriendlyDayString(context, dateInMillis));
 
         // Read weather forecast from cursor
-        String description = cursor.getString(ForecastFragment.COL_WEATHER_DESC);
+        String description = cursor.getString(COL_WEATHER_DESC);
         // Find TextView and set weather forecast on it
         viewHolder.descriptionView.setText(description);
 
@@ -104,11 +114,11 @@ public class ForecastAdapter extends CursorAdapter {
         viewHolder.iconView.setContentDescription(description);
 
         // Read high temperature from cursor
-        double high = cursor.getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
+        double high = cursor.getDouble(COL_WEATHER_MAX_TEMP);
         viewHolder.highTempView.setText(Utility.formatTemperature(context, high));
 
         // Read low temperature from cursor
-        double low = cursor.getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
+        double low = cursor.getDouble(COL_WEATHER_MIN_TEMP);
         viewHolder.lowTempView.setText(Utility.formatTemperature(context, low));
     }
 

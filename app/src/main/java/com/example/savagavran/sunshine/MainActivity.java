@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.savagavran.sunshine.component.DaggerMainActivityComponent;
 import com.example.savagavran.sunshine.module.MainActivityModule;
@@ -21,18 +20,14 @@ public class MainActivity extends AppCompatActivity
 
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
     private final int REQUEST_SETTING = 0;
-    private String mLocation;
     private boolean mTwoPane;
-    private boolean mUnitChanged;
 
     @Inject
-    public Presenter.MainPresenter.PresenterOps mMainPresenter;
+    public Presenter.MainPresenter mMainPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mLocation = Utility.getPreferredLocation(this);
-        mUnitChanged = Utility.isMetric(this);
         setContentView(R.layout.activity_main);
 
         DaggerMainActivityComponent
@@ -98,7 +93,7 @@ public class MainActivity extends AppCompatActivity
             ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
             DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
             if ( null != ff & !mTwoPane) {
-                ff.onLocationChanged();
+                ff.onLocationOrUnitChanged(this);
             }
             if ( null != df ) {
                 df.onLocationChanged();
@@ -136,16 +131,11 @@ public class MainActivity extends AppCompatActivity
             return;
 
         if(requestCode == REQUEST_SETTING) {
-            if(mUnitChanged != data.getBooleanExtra(SettingsActivity.UNIT_RESULT, true)){
-                mUnitChanged = data.getBooleanExtra(SettingsActivity.UNIT_RESULT, true);
+            if(data.getBooleanExtra(SettingsActivity.UNIT_RESULT, true)){
                 ForecastFragment forecastFragment =  ((ForecastFragment)getSupportFragmentManager()
                         .findFragmentById(R.id.fragment_forecast));
-                forecastFragment.onUnitChanged();
+                forecastFragment.onLocationOrUnitChanged(this);
             }
         }
-    }
-
-    public void setToast() {
-        Toast.makeText(this, "Test", Toast.LENGTH_SHORT).show();
     }
 }

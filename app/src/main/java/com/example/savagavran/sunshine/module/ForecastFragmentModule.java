@@ -1,7 +1,8 @@
 package com.example.savagavran.sunshine.module;
 
-import com.example.savagavran.sunshine.ForecastFragment;
-import com.example.savagavran.sunshine.presenter.ForecastFragmentPresenter;
+import com.example.savagavran.sunshine.RequiredView;
+import com.example.savagavran.sunshine.data.Model;
+import com.example.savagavran.sunshine.presenter.ForecastFragmentPresenterImpl;
 import com.example.savagavran.sunshine.presenter.Presenter;
 
 import dagger.Module;
@@ -9,20 +10,15 @@ import dagger.Provides;
 
 @Module
 public class ForecastFragmentModule {
-    ForecastFragment forecastFragment;
 
-    public ForecastFragmentModule(ForecastFragment fragment) {
+    private RequiredView.ForecastViewOps forecastFragment;
+
+    public ForecastFragmentModule(RequiredView.ForecastViewOps fragment) {
         forecastFragment = fragment;
     }
 
     @Provides
-    ForecastFragment providesMainActivity() {
-        return forecastFragment;
-    }
-
-    @Provides
-    Presenter.ForecastPresenter providedPresenterOps() {
-        ForecastFragmentPresenter presenter = new ForecastFragmentPresenter(forecastFragment);
-        return presenter;
+    Presenter.ForecastPresenter providedPresenterOps(Model.ModelOps model) {
+        return new ForecastFragmentPresenterImpl(forecastFragment, model);
     }
 }

@@ -8,7 +8,7 @@ import com.example.savagavran.sunshine.data.Model;
 import java.lang.ref.WeakReference;
 
 public class MainPresenterImpl
-        implements Presenter.MainPresenter.PresenterOps {
+        implements Presenter.MainPresenter {
 
     private WeakReference<RequiredView.RequiredViewOps> mView;
     private Model.ModelOps mModel;
@@ -37,8 +37,8 @@ public class MainPresenterImpl
         return mModel.hasLocationChanged(context);
     }
 
-    public void test() {
-        if(mView.get()!= null)
-            ((RequiredView.RequiredViewOps)mView).setToast();
+    @Override
+    public boolean hasUnitChanged(Context context) {
+        return mModel.hasUnitChanged(context);
     }
 }

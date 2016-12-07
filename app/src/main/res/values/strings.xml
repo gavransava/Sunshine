@@ -43,7 +43,7 @@
     <string name="pref_units_label_imperial">Imperial</string>
 
     <!-- Key name for temperature unit preference in SharedPreferences [CHAR LIMIT=NONE] -->
-    <string name="pref_units_key" translatable="false">units</string>
+    <string name="pref_units_key" translatable="false"></string>
 
     <!-- Value in SharedPreferences for metric temperature unit option [CHAR LIMIT=NONE] -->
     <string name="pref_units_metric" translatable="false">metric</string>

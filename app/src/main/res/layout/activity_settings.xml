@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/activity_settings_layout"
+              android:orientation="vertical"
+              android:layout_marginLeft="16dp"
+              android:layout_marginRight="16dp"
+              android:layout_marginTop="16dp"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:text="@string/pref_location_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/black"/>
+    <EditText android:id="@+id/location_edit"
+              android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+              android:paddingLeft="16dp"
+              android:title="@string/pref_location_label"
+              android:defaultValue="@string/pref_location_default"
+              android:inputType="text"/>
+
+    <TextView
+        android:text="@string/pref_units_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="18sp"
+        android:textColor="@color/black"/>
+    <ListView android:id="@+id/temperature_units"
+              android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+              android:choiceMode="singleChoice"
+              android:listSelector="@color/grey"
+              android:focusable="false"
+              android:title="@string/pref_units_label"
+              android:entries="@array/pref_units_options"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+        <TextView android:id="@+id/weather_notification_label"
+                  android:text="@string/pref_enable_notifications_label"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_centerVertical="true"
+                  android:textSize="18sp"
+                  android:textColor="@color/black"/>
+        <CheckBox android:id="@+id/notification_enable"
+                  android:layout_height="wrap_content"
+                  android:layout_width="wrap_content"
+                  android:title="@string/pref_enable_notifications_label"
+                  android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+</LinearLayout>

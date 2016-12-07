@@ -253,7 +253,7 @@ public class TestProvider extends AndroidTestCase {
         // Test to make sure our observer is called.  If not, we throw an assertion.
         //
         // Students: If your code is failing here, it means that your content provider
-        // isn't calling getContext().getContentResolver().notifyChange(uri, null);
+        // isn't calling returnContext().getContentResolver().notifyChange(uri, null);
         tco.waitForNotificationOrFail();
 
         locationCursor.unregisterContentObserver(tco);
@@ -289,7 +289,7 @@ public class TestProvider extends AndroidTestCase {
         Uri locationUri = mContext.getContentResolver().insert(LocationEntry.CONTENT_URI, testValues);
 
         // Did our content observer get called?  Students:  If this fails, your insert location
-        // isn't calling getContext().getContentResolver().notifyChange(uri, null);
+        // isn't calling returnContext().getContentResolver().notifyChange(uri, null);
         tco.waitForNotificationOrFail();
         mContext.getContentResolver().unregisterContentObserver(tco);
 
@@ -326,7 +326,7 @@ public class TestProvider extends AndroidTestCase {
 
         // Did our content observer get called?  Students:  If this fails, your insert weather
         // in your ContentProvider isn't calling
-        // getContext().getContentResolver().notifyChange(uri, null);
+        // returnContext().getContentResolver().notifyChange(uri, null);
         tco.waitForNotificationOrFail();
         mContext.getContentResolver().unregisterContentObserver(tco);
 
@@ -400,7 +400,7 @@ public class TestProvider extends AndroidTestCase {
         deleteAllRecordsFromProvider();
 
         // Students: If either of these fail, you most-likely are not calling the
-        // getContext().getContentResolver().notifyChange(uri, null); in the ContentProvider
+        // returnContext().getContentResolver().notifyChange(uri, null); in the ContentProvider
         // delete.  (only if the insertReadProvider is succeeding)
         locationObserver.waitForNotificationOrFail();
         weatherObserver.waitForNotificationOrFail();
@@ -473,7 +473,7 @@ public class TestProvider extends AndroidTestCase {
         int insertCount = mContext.getContentResolver().bulkInsert(WeatherEntry.CONTENT_URI, bulkInsertContentValues);
 
         // Students:  If this fails, it means that you most-likely are not calling the
-        // getContext().getContentResolver().notifyChange(uri, null); in your BulkInsert
+        // returnContext().getContentResolver().notifyChange(uri, null); in your BulkInsert
         // ContentProvider method.
         weatherObserver.waitForNotificationOrFail();
         mContext.getContentResolver().unregisterContentObserver(weatherObserver);

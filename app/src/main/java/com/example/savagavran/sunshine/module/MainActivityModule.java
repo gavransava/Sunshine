@@ -18,7 +18,7 @@ public class MainActivityModule {
     }
 
     @Provides
-    Presenter.MainPresenter.PresenterOps providedPresenterOps(Model.ModelOps model) {
+    Presenter.MainPresenter providedPresenterOps(Model.ModelOps model) {
         return new MainPresenterImpl(mActivity, model);
     }
 }
