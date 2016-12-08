@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity
                 .build()
                 .inject(this);
 
-
         if (findViewById(R.id.weather_detail_container) != null) {
             // The detail container view will be present only in the large-screen layouts
             // (res/layout-sw600dp). If this view is present, then the activity should be
@@ -93,7 +92,7 @@ public class MainActivity extends AppCompatActivity
         if(mMainPresenter.hasLocationChanged(this)) {
             ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
             DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
-            if ( null != ff & !mTwoPane) {
+            if ( null != ff) {
                 ff.onLocationOrUnitChanged(this);
             }
             if ( null != df ) {

@@ -75,10 +75,6 @@ public class MainModel
 
     private static final int FORECAST_LOADER = 0;
 
-    public void updateWeather(Context context) {
-        SunshineSyncAdapter.syncImmediately(context);
-    }
-
     @Override
     public void setUseTodayLayout(boolean useTodayLayout) {
         if (mForecastAdapter != null) {
@@ -110,7 +106,7 @@ public class MainModel
 
     @Override
     public void onLocationOrUnitChanged(Context context, LoaderManager locationManager) {
-        updateWeather(context);
+        SunshineSyncAdapter.syncImmediately(context);
         if(locationManager != null) {
             locationManager.restartLoader(FORECAST_LOADER, null, this);
         } else {
@@ -121,21 +117,13 @@ public class MainModel
         }
     }
 
-    private String mLocation;
-    private boolean mUnitChanged;
+    private String mLocationValue;
     private boolean mNotificationValue;
     private int mUnitValue;
 
     @Override
-    public boolean hasUnitChanged(Context context) {
-        mUnitChanged = Utility.isMetric(context);
-
-        return false;
-    }
-
-    @Override
     public String getLocationValue() {
-        return mLocation;
+        return mLocationValue;
     }
 
     @Override
@@ -167,9 +155,9 @@ public class MainModel
     @Override
     public void onLocationChanged(Context context, String location) {
         SharedPreferences.Editor editor = getDefaultSharedPreferences(context).edit();
-        if(mLocation != location){
+        if(mLocationValue != location){
             mLocationChanged = true;
-            mLocation = location;
+            mLocationValue = location;
         }
         else {
             mLocationChanged = false;
@@ -205,11 +193,11 @@ public class MainModel
             String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
 
             String locationSetting = Utility.getPreferredLocation(temp);
-            mLocation = locationSetting;
+            mLocationValue = locationSetting;
             Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
                     locationSetting, System.currentTimeMillis());
 
-            return new CursorLoader(mContext.get(),
+            return new CursorLoader(temp,
                     weatherForLocationUri,
                     FORECAST_COLUMNS,
                     null,

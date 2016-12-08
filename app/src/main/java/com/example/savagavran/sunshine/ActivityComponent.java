@@ -16,5 +16,6 @@ public interface ActivityComponent {
     Context getContext();
 
     Model.ModelOps getModel();
+    Model.DetailModelOps getDetailModel();
 
 }

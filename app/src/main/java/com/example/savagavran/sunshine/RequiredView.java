@@ -7,9 +7,7 @@ import android.support.v4.app.LoaderManager;
 // Presenter/s -> View/s
 public interface RequiredView {
 
-
     interface RequiredViewOps {
-
 
     }
 
@@ -20,6 +18,11 @@ public interface RequiredView {
         LoaderManager returnLoaderManager();
         void setRetryLayoutVisibility(int visibility);
         void scrollToPosition();
+    }
+
+    interface DetailViewOps {
+        LoaderManager returnLoaderManager();
+        void populateDetailFragmentWithData(DetailData data);
     }
 
     interface SettingsViewOps {

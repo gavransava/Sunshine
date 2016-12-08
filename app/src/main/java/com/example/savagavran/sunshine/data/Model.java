@@ -1,18 +1,19 @@
 package com.example.savagavran.sunshine.data;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 
 import com.example.savagavran.sunshine.ForecastAdapter;
 import com.example.savagavran.sunshine.RequiredView;
+import com.example.savagavran.sunshine.presenter.DetailFragmentPresenterImpl;
 import com.example.savagavran.sunshine.presenter.ForecastFragmentPresenterImpl;
 
 public interface Model {
     // Presenter -> Model
     interface ModelOps {
         boolean hasLocationChanged(Context context);
-        boolean hasUnitChanged(Context context);
         void synchronise(Context context);
         void onLocationChanged(Context context, String location);
         void onUnitChanged(Context context, int position);
@@ -36,5 +37,14 @@ public interface Model {
         void setPresenter(ForecastFragmentPresenterImpl forecastFragmentPresenter);
 
         String getPreferredLocation(FragmentActivity activity);
+    }
+
+    interface DetailModelOps {
+
+        void initLoader(LoaderManager loaderManager, Context context, Uri uri);
+
+        void setPresenter(DetailFragmentPresenterImpl detailFragmentPresenter);
+
+        void onLocationChanged();
     }
 }

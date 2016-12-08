@@ -1,6 +1,7 @@
 package com.example.savagavran.sunshine.presenter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 
 import com.example.savagavran.sunshine.ForecastAdapter;
@@ -35,6 +36,11 @@ public interface Presenter {
         void onLocationOrUnitChanged(Context context);
 
         String getPreferredLocation(FragmentActivity activity);
+    }
+
+    interface DetailPresenter {
+        void initLoader(Context context, Uri uri);
+        void onLocationChanged();
     }
 
     interface SettingsPresenter {
