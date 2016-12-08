@@ -1,9 +1,11 @@
 package com.example.savagavran.sunshine.presenter;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 
 import com.example.savagavran.sunshine.ForecastAdapter;
 import com.example.savagavran.sunshine.RequiredView;
+import com.example.savagavran.sunshine.SettingsActivity;
 
 public interface Presenter {
 
@@ -14,8 +16,6 @@ public interface Presenter {
         void onConfigurationChanged(RequiredView.RequiredViewOps view);
         void onDestroy(boolean isChangingConfig);
         boolean hasLocationChanged(Context context);
-        boolean hasUnitChanged(Context context);
-
 
         // Model -> Presenter
     }
@@ -33,6 +33,8 @@ public interface Presenter {
         void openPreferredLocationInMap();
 
         void onLocationOrUnitChanged(Context context);
+
+        String getPreferredLocation(FragmentActivity activity);
     }
 
     interface SettingsPresenter {
@@ -48,12 +50,13 @@ public interface Presenter {
         void getLocationValue(Presenter.SettingsPresenter presenter);
         void getUnitValue(Presenter.SettingsPresenter presenter);
         void getNotificationsValue(Presenter.SettingsPresenter presenter);
-
+        void onUnitChanged(SettingsActivity settingsActivity);
 
         //Presenter helper methods (called on presenter argument from above get methods)
         void returnLocationValue(String value);
         void returnUnitValue(int value);
         void returnNotificationsValue(boolean value);
+
 
     }
 }

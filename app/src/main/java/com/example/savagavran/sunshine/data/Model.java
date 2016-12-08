@@ -1,6 +1,7 @@
 package com.example.savagavran.sunshine.data;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 
 import com.example.savagavran.sunshine.ForecastAdapter;
@@ -33,5 +34,7 @@ public interface Model {
         void openPreferredLocationInMap(RequiredView.ForecastViewOps temp);
 
         void setPresenter(ForecastFragmentPresenterImpl forecastFragmentPresenter);
+
+        String getPreferredLocation(FragmentActivity activity);
     }
 }

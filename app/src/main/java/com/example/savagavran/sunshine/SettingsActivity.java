@@ -1,7 +1,6 @@
 package com.example.savagavran.sunshine;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -23,7 +22,7 @@ import javax.inject.Inject;
 public class SettingsActivity extends AppCompatActivity
         implements RequiredView.SettingsViewOps {
 
-    private boolean mUnit;
+    private int mUnit;
     public static final String UNIT_RESULT = "unit_result";
 
     private EditText mLocationEdit;
@@ -47,10 +46,6 @@ public class SettingsActivity extends AppCompatActivity
                 .settingsActivityModule(new SettingsActivityModule(this))
                 .build()
                 .inject(this);
-
-        wireEditText();
-        wireListView();
-        wireCheckBox();
 
         mSettingsPresenter.getLocationValue(mSettingsPresenter);
         mSettingsPresenter.getUnitValue(mSettingsPresenter);
@@ -79,7 +74,8 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mSettingsPresenter.onUnitChanged(SettingsActivity.this, position);
-                mUnit = true; // temporary solution
+                if(mUnit != position)
+                    mSettingsPresenter.onUnitChanged(SettingsActivity.this);
             }
         });
     }
@@ -95,24 +91,21 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     @Override
-    public void updateNotifitacionSettingValue(boolean value) {
-        mNotifications.setChecked(value);
+    public void updateLocationSettingValue(String value) {
+        mLocationEdit.setText(value);
+        wireEditText();
     }
 
     @Override
     public void updateUnitSettingValue(int value) {
-
+        mUnit = value;
+        wireListView();
     }
 
     @Override
-    public void updateLocationSettingValue(String value) {
-        mLocationEdit.setText(value);
-    }
-
-    private void returnResult() {
-        Intent intent = this.getIntent();
-        intent.putExtra(UNIT_RESULT, mUnit);
-        this.setResult(RESULT_OK, intent);
+    public void updateNotifitacionSettingValue(boolean value) {
+        mNotifications.setChecked(value);
+        wireCheckBox();
     }
 
     @Override
@@ -123,11 +116,5 @@ public class SettingsActivity extends AppCompatActivity
                 return(true);
         }
         return(super.onOptionsItemSelected(item));
-    }
-
-    @Override
-    public void finish() {
-        returnResult();
-        super.finish();
     }
 }

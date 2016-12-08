@@ -36,9 +36,4 @@ public class MainPresenterImpl
     public boolean hasLocationChanged(Context context) {
         return mModel.hasLocationChanged(context);
     }
-
-    @Override
-    public boolean hasUnitChanged(Context context) {
-        return mModel.hasUnitChanged(context);
-    }
 }

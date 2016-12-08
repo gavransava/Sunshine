@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity
         SunshineSyncAdapter.initializeSyncAdapter(this);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -120,22 +121,6 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, DetailActivity.class)
                     .setData(contentUri);
             startActivity(intent);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(resultCode != RESULT_OK)
-            return;
-
-        if(requestCode == REQUEST_SETTING) {
-            if(data.getBooleanExtra(SettingsActivity.UNIT_RESULT, true)){
-                ForecastFragment forecastFragment =  ((ForecastFragment)getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment_forecast));
-                forecastFragment.onLocationOrUnitChanged(this);
-            }
         }
     }
 }

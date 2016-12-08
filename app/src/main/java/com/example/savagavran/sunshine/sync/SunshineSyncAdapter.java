@@ -27,6 +27,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.savagavran.sunshine.BuildConfig;
+import com.example.savagavran.sunshine.ForecastFragment;
 import com.example.savagavran.sunshine.MainActivity;
 import com.example.savagavran.sunshine.R;
 import com.example.savagavran.sunshine.Utility;
@@ -36,6 +37,7 @@ import com.example.savagavran.sunshine.data.WeatherResponse;
 import com.example.savagavran.sunshine.sync.error.APIError;
 import com.example.savagavran.sunshine.sync.error.ErrorUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Vector;
 
@@ -53,6 +55,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
     private static final int WEATHER_NOTIFICATION_ID = 3004;
+    private WeakReference<ForecastFragment> mForecastFragment;
 
     private static final String[] NOTIFY_WEATHER_PROJECTION = new String[] {
             WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,

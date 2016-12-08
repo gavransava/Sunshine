@@ -3,6 +3,7 @@ package com.example.savagavran.sunshine.presenter;
 import android.content.Context;
 
 import com.example.savagavran.sunshine.RequiredView;
+import com.example.savagavran.sunshine.SettingsActivity;
 import com.example.savagavran.sunshine.data.Model;
 
 import java.lang.ref.WeakReference;
@@ -13,6 +14,10 @@ public class SettingsPresenterImpl
     private WeakReference<RequiredView.SettingsViewOps> mView;
     private Model.ModelOps mModel;
 
+    @Override
+    public void onUnitChanged(SettingsActivity settingsActivity) {
+        mModel.onLocationOrUnitChanged(settingsActivity, null);
+    }
 
     @Override
     public void returnLocationValue(String value) {

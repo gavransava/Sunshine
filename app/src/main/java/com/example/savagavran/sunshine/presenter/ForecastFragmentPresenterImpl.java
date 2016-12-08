@@ -1,6 +1,7 @@
 package com.example.savagavran.sunshine.presenter;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 
 import com.example.savagavran.sunshine.ForecastAdapter;
 import com.example.savagavran.sunshine.RequiredView;
@@ -14,6 +15,10 @@ public class ForecastFragmentPresenterImpl
     private WeakReference<RequiredView.ForecastViewOps> mView;
     private Model.ModelOps mModel;
 
+    @Override
+    public String getPreferredLocation(FragmentActivity activity) {
+        return mModel.getPreferredLocation(activity);
+    }
 
     public ForecastFragmentPresenterImpl(RequiredView.ForecastViewOps view, Model.ModelOps model) {
         mView = new WeakReference<>(view);

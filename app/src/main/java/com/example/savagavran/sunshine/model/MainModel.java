@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -32,6 +33,8 @@ public class MainModel
 
     private WeakReference<Context> mContext;
     private ForecastFragmentPresenterImpl mForecastFragmentPresenter;
+    private WeakReference<LoaderManager> mLoader;
+    private boolean mLocationChanged;
 
     @Override
     public ForecastAdapter setUpForecastAdapter(RequiredView.ForecastViewOps context, boolean useTodayLayout) {
@@ -108,7 +111,14 @@ public class MainModel
     @Override
     public void onLocationOrUnitChanged(Context context, LoaderManager locationManager) {
         updateWeather(context);
-        locationManager.restartLoader(FORECAST_LOADER, null, this);
+        if(locationManager != null) {
+            locationManager.restartLoader(FORECAST_LOADER, null, this);
+        } else {
+            LoaderManager temp = mLoader.get();
+            if(temp != null){
+                temp.restartLoader(FORECAST_LOADER, null, this);
+            }
+        }
     }
 
     private String mLocation;
@@ -157,17 +167,22 @@ public class MainModel
     @Override
     public void onLocationChanged(Context context, String location) {
         SharedPreferences.Editor editor = getDefaultSharedPreferences(context).edit();
+        if(mLocation != location){
+            mLocationChanged = true;
+            mLocation = location;
+        }
+        else {
+            mLocationChanged = false;
+        }
         editor.putString(context.getString(R.string.pref_location_key), location);
-        mLocation = location;
+
         editor.apply();
     }
 
     @Override
     public boolean hasLocationChanged(Context context) {
-
-        String location = Utility.getPreferredLocation(context);
-        if (location != null && !location.equals(mLocation)) {
-            mLocation = location;
+        if(mLocationChanged){
+            mLocationChanged = false;
             return true;
         } else {
             return false;
@@ -190,6 +205,7 @@ public class MainModel
             String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
 
             String locationSetting = Utility.getPreferredLocation(temp);
+            mLocation = locationSetting;
             Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
                     locationSetting, System.currentTimeMillis());
 
@@ -203,23 +219,29 @@ public class MainModel
         return null;
     }
 
+    @Override
+    public String getPreferredLocation(FragmentActivity activity) {
+        return Utility.getPreferredLocation(activity);
+    }
 
     @Override
     public void initLoader(LoaderManager loaderManager, Context context) {
         mContext = new WeakReference<>(context);
         loaderManager.initLoader(FORECAST_LOADER, null, this);
+        mLoader = new WeakReference<>(loaderManager);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Context temp;
         mForecastAdapter.swapCursor(data);
-        if(data.getCount() != 0)
+        if(data.getCount() != 0) {
             if (mContext.get() != null) {
-                temp = mContext.get();
                 mForecastFragmentPresenter.setRetryLayoutVisibility(View.GONE);
                 mForecastFragmentPresenter.scrollToPosition();
             }
+        } else {
+            mForecastFragmentPresenter.setRetryLayoutVisibility(View.VISIBLE);
+        }
     }
 
     @Override

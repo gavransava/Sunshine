@@ -42,7 +42,7 @@ public class ForecastFragment extends Fragment
 
     @Override
     public void setRetryLayoutVisibility(int visibility) {
-        mRetryLayout.setVisibility(View.GONE);
+        mRetryLayout.setVisibility(visibility);
     }
 
     private ListView mListView;
@@ -118,8 +118,6 @@ public class ForecastFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         // Get a reference to the ListView, and attach this adapter to it.
@@ -149,7 +147,7 @@ public class ForecastFragment extends Fragment
                 // if it cannot seek to that position.
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
-                    String locationSetting = Utility.getPreferredLocation(getActivity());
+                    String locationSetting = mForecastPresenter.getPreferredLocation(getActivity());
                     ((Callback) getActivity()).onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
                             locationSetting, cursor.getLong(COL_WEATHER_DATE)
                     ));
