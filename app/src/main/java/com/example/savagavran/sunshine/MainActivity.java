@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity
 
     @Inject
     public Presenter.MainPresenter mMainPresenter;
+    private Uri mUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +100,13 @@ public class MainActivity extends AppCompatActivity
                 df.onLocationChanged();
             }
         }
+        if(mTwoPane)
+            onItemSelected(mUri);
     }
 
     @Override
     public void onItemSelected(Uri contentUri) {
+        mUri = contentUri;
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
