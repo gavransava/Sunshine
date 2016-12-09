@@ -13,7 +13,4 @@ public interface ApiInterface {
     Call<WeatherResponse> getDailyWeatherData(@Query("id") String id, @Query("mode") String mode,
                                               @Query("units") String units, @Query("cnt") int count,
                                               @Query("APPID") String appid);
-    @GET("/")
-    Call<WeatherResponse> getDailyWeatherDataMOC();
-
 }

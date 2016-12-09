@@ -97,6 +97,10 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                     numDays,
                     BuildConfig.OPEN_WEATHER_MAP_API_KEY);
 
+            // Sync
+             Response<WeatherResponse> response = call.execute();
+
+            // Async
             call.enqueue(new Callback<WeatherResponse>() {
                 @Override
                 public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
