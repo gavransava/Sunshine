@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
+import android.widget.AdapterView;
 
 import com.example.savagavran.sunshine.ForecastAdapter;
 import com.example.savagavran.sunshine.RequiredView;
@@ -37,6 +38,8 @@ public interface Model {
         void setPresenter(ForecastFragmentPresenterImpl forecastFragmentPresenter);
 
         String getPreferredLocation(FragmentActivity activity);
+
+        Uri buildWeatherLocationWithDate(AdapterView<?> adapterView, int position, String locationSetting);
     }
 
     interface DetailModelOps {

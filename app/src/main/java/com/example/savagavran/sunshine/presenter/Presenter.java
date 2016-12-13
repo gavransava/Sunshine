@@ -3,6 +3,7 @@ package com.example.savagavran.sunshine.presenter;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
+import android.widget.AdapterView;
 
 import com.example.savagavran.sunshine.ForecastAdapter;
 import com.example.savagavran.sunshine.RequiredView;
@@ -36,6 +37,8 @@ public interface Presenter {
         void onLocationOrUnitChanged(Context context);
 
         String getPreferredLocation(FragmentActivity activity);
+
+        Uri buildWeatherLocationWithDate(AdapterView<?> adapterView, int position, String locationSetting);
     }
 
     interface DetailPresenter {

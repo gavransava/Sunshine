@@ -1,7 +1,9 @@
 package com.example.savagavran.sunshine.presenter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
+import android.widget.AdapterView;
 
 import com.example.savagavran.sunshine.ForecastAdapter;
 import com.example.savagavran.sunshine.RequiredView;
@@ -11,6 +13,11 @@ import java.lang.ref.WeakReference;
 
 public class ForecastFragmentPresenterImpl
         implements Presenter.ForecastPresenter {
+
+    @Override
+    public Uri buildWeatherLocationWithDate(AdapterView<?> adapterView, int position, String locationSetting) {
+        return mModel.buildWeatherLocationWithDate(adapterView, position, locationSetting);
+    }
 
     private WeakReference<RequiredView.ForecastViewOps> mView;
     private Model.ModelOps mModel;

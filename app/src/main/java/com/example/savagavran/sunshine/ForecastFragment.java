@@ -2,7 +2,6 @@ package com.example.savagavran.sunshine;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,14 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.savagavran.sunshine.component.DaggerForecastComponent;
-import com.example.savagavran.sunshine.data.WeatherContract;
 import com.example.savagavran.sunshine.module.ForecastFragmentModule;
 import com.example.savagavran.sunshine.presenter.Presenter;
 import com.example.savagavran.sunshine.sync.SunshineSyncAdapter;
 
 import javax.inject.Inject;
-
-import static com.example.savagavran.sunshine.ForecastAdapter.COL_WEATHER_DATE;
 
 public class ForecastFragment extends Fragment
         implements RequiredView.ForecastViewOps {
@@ -143,15 +139,10 @@ public class ForecastFragment extends Fragment
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                // if it cannot seek to that position.
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                if (cursor != null) {
+
                     String locationSetting = mForecastPresenter.getPreferredLocation(getActivity());
-                    ((Callback) getActivity()).onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-                            locationSetting, cursor.getLong(COL_WEATHER_DATE)
-                    ));
-                }
+                    ((Callback) getActivity()).onItemSelected(mForecastPresenter.buildWeatherLocationWithDate(adapterView, position, locationSetting));
+
                 mPosition = position;
             }
         });

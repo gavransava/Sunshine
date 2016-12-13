@@ -13,6 +13,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 
 import com.example.savagavran.sunshine.ForecastAdapter;
 import com.example.savagavran.sunshine.R;
@@ -32,6 +33,18 @@ public class MainModel
         implements Model.ModelOps, LoaderManager.LoaderCallbacks<Cursor> {
 
     private WeakReference<Context> mContext;
+
+    @Override
+    public Uri buildWeatherLocationWithDate(AdapterView<?> adapterView, int position, String locationSetting) {
+
+        Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+        if (cursor != null) {
+            return WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+                    locationSetting, cursor.getLong(mForecastAdapter.COL_WEATHER_DATE));
+        }
+        return null;
+    }
+
     private ForecastFragmentPresenterImpl mForecastFragmentPresenter;
     private WeakReference<LoaderManager> mLoader;
     private boolean mLocationChanged;
