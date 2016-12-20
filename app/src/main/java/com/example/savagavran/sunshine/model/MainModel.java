@@ -57,7 +57,8 @@ public class MainModel
         data.setLowTemp(obj.getMin());
         data.setHumidity(obj.getHumidity());
         data.setPressure(obj.getPressure());
-        data.setWindInfo(obj.getDirection());
+        data.setWindInfo(Utility.getFormattedWind(mForecastAdapter.getContext(),
+                Float.parseFloat(obj.getSpeed()), Float.parseFloat(obj.getDirection())));
 
         mDetailFragmentPresenter.populateDetailFragmentWithData(data);
     }

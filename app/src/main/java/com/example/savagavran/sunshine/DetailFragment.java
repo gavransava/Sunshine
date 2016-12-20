@@ -131,8 +131,8 @@ public class DetailFragment extends Fragment
         mIconView.setContentDescription(data.getDescription());
         mHighTempView.setText(data.getMaxTemp());
         mLowTempView.setText(data.getLowTemp());
-        mHumidityView.setText(data.getHumidity());
-        mPressureView.setText(data.getPressure());
+        mHumidityView.setText(getString(R.string.format_humidity, Float.parseFloat(data.getHumidity())));
+        mPressureView.setText(getString(R.string.format_pressure, Float.parseFloat(data.getPressure())));
         mWindView.setText(data.getWindInfo());
 
         mForecast = String.format("%s - %s - %s/%s",
