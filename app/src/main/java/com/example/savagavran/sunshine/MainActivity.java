@@ -1,7 +1,6 @@
 package com.example.savagavran.sunshine;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -26,7 +25,8 @@ public class MainActivity extends AppCompatActivity
 
     @Inject
     public Presenter.MainPresenter mMainPresenter;
-    private Uri mUri;
+    private int mPosition;
+    private String mLocationSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity
                 .findFragmentById(R.id.fragment_forecast));
         forecastFragment.setUseTodayLayout(!mTwoPane);
 
-        SunshineSyncAdapter.initializeSyncAdapter(this);
+        SunshineSyncAdapter.initializeSyncAdapter(this, mMainPresenter);
     }
 
 
@@ -99,24 +99,26 @@ public class MainActivity extends AppCompatActivity
                 ff.onLocationOrUnitChanged(this);
             }
             if ( null != df ) {
-                df.onLocationChanged();
+              //  df.onLocationChanged();
                 reCreateDetailFragment();
                 return;
             }
         }
         if(mTwoPane)
-            onItemSelected(mUri);
+            onItemSelected(mPosition, mLocationSetting);
     }
 
     @Override
-    public void onItemSelected(Uri contentUri) {
-        mUri = contentUri;
+    public void onItemSelected(int position, String locationSetting) {
+        mPosition = position;
+        mLocationSetting = locationSetting;
         if (mTwoPane) {
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
             Bundle args = new Bundle();
-            args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
+            args.putInt(DetailFragment.DETAIL_POSITION, position);
+            args.putString(DetailFragment.DETAIL_LOCATION, locationSetting);
 
             DetailFragment fragment = new DetailFragment();
             fragment.setArguments(args);
@@ -126,7 +128,8 @@ public class MainActivity extends AppCompatActivity
                     .commit();
         } else {
             Intent intent = new Intent(this, DetailActivity.class)
-                    .setData(contentUri);
+                    .putExtra(DetailFragment.DETAIL_POSITION, position)
+                    .putExtra(DetailFragment.DETAIL_LOCATION, locationSetting);
             startActivity(intent);
         }
     }

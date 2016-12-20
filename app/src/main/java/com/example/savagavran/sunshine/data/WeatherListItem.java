@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeatherListItem {
+public class WeatherListItem{
 
     @SerializedName("dt")
     private String dateTime;

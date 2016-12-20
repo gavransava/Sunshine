@@ -1,33 +1,30 @@
 package com.example.savagavran.sunshine.data;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager;
-import android.widget.AdapterView;
+import android.text.format.Time;
 
 import com.example.savagavran.sunshine.ForecastAdapter;
 import com.example.savagavran.sunshine.RequiredView;
 import com.example.savagavran.sunshine.presenter.DetailFragmentPresenterImpl;
 import com.example.savagavran.sunshine.presenter.ForecastFragmentPresenterImpl;
 
+import java.util.List;
+
 public interface Model {
     // Presenter -> Model
     interface ModelOps {
         boolean hasLocationChanged(Context context);
-        void synchronise(Context context);
         void onLocationChanged(Context context, String location);
         void onUnitChanged(Context context, int position);
         void onNotificationChanged(Context context, boolean notificationEnabled);
 
-        String getLocationValue();
-        int getUnitValue();
-        boolean getNotificationsValue();
+        String getLocationValue(Context context);
+        int getUnitValue(Context context);
+        boolean getNotificationsValue(Context context);
 
         //ForecastFragmentPresenter -> Model
-        void onLocationOrUnitChanged(Context context,  LoaderManager locationManager);
-
-        void initLoader(LoaderManager loaderManager, Context context);
+        void onLocationOrUnitChanged(Context context);
 
         ForecastAdapter setUpForecastAdapter(RequiredView.ForecastViewOps context, boolean useTodayLayout);
 
@@ -35,19 +32,14 @@ public interface Model {
 
         void openPreferredLocationInMap(RequiredView.ForecastViewOps temp);
 
-        void setPresenter(ForecastFragmentPresenterImpl forecastFragmentPresenter);
-
         String getPreferredLocation(FragmentActivity activity);
 
-        Uri buildWeatherLocationWithDate(AdapterView<?> adapterView, int position, String locationSetting);
-    }
+        void bulkInsert(List<WeatherListItem> weather, Time dayTime, int julianStartDay, String locationId);
 
-    interface DetailModelOps {
+        void setDetailPresenter(DetailFragmentPresenterImpl detailFragmentPresenter);
 
-        void initLoader(LoaderManager loaderManager, Context context, Uri uri);
+        void setForecastPresenter(ForecastFragmentPresenterImpl forecastFragmentPresenter);
 
-        void setPresenter(DetailFragmentPresenterImpl detailFragmentPresenter);
-
-        void onLocationChanged();
+        void getDetailData(int position, String location);
     }
 }

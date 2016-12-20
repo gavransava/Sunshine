@@ -1,11 +1,14 @@
 package com.example.savagavran.sunshine.presenter;
 
 import android.content.Context;
+import android.text.format.Time;
 
 import com.example.savagavran.sunshine.RequiredView;
 import com.example.savagavran.sunshine.data.Model;
+import com.example.savagavran.sunshine.data.WeatherListItem;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 public class MainPresenterImpl
         implements Presenter.MainPresenter {
@@ -35,5 +38,10 @@ public class MainPresenterImpl
     @Override
     public boolean hasLocationChanged(Context context) {
         return mModel.hasLocationChanged(context);
+    }
+
+    @Override
+    public void bulkInsert(List<WeatherListItem> weather, Time dayTime, int julianStartDay, String locationId) {
+        mModel.bulkInsert(weather, dayTime, julianStartDay, locationId);
     }
 }

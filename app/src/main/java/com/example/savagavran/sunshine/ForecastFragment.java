@@ -2,10 +2,8 @@ package com.example.savagavran.sunshine;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -29,16 +28,12 @@ import javax.inject.Inject;
 public class ForecastFragment extends Fragment
         implements RequiredView.ForecastViewOps {
 
-    @Override
-    public LoaderManager returnLoaderManager() {
-        return getLoaderManager();
-    }
-
     public static final String LOG_TAG = ForecastFragment.class.getSimpleName();
 
     @Override
     public void setRetryLayoutVisibility(int visibility) {
-        mRetryLayout.setVisibility(visibility);
+        if(mRetryLayout!=null)
+            mRetryLayout.setVisibility(visibility);
     }
 
     private ListView mListView;
@@ -50,14 +45,9 @@ public class ForecastFragment extends Fragment
     private static final String SELECTED_KEY = "selected_position";
     private static final String SUNSHINE_SERVICE = "sunshine_service";
 
-
     @Inject
     public Presenter.ForecastPresenter  mForecastPresenter;
 
-    @Override
-    public Context returnContext() {
-        return this.getContext();
-    }
 
     // When called from activity just return this instead of getActivity.
     @Override
@@ -74,7 +64,7 @@ public class ForecastFragment extends Fragment
         /**
          * DetailFragmentCallback for when an item has been selected.
          */
-        public void onItemSelected(Uri dateUri);
+        public void onItemSelected(int position, String locationSetting);
     }
 
 
@@ -121,6 +111,7 @@ public class ForecastFragment extends Fragment
         mListView.setAdapter(mForecastPresenter.setUpForecastAdapter(mUseTodayLayout));
 
         mRetryLayout = (LinearLayout) rootView.findViewById(R.id.retry_layout);
+        setRetryLayoutVisibility(View.GONE);
 
         mRetryButton = (ImageView) rootView.findViewById(R.id.button_retry);
         mRetryButton.setOnClickListener(new View.OnClickListener() {
@@ -134,14 +125,13 @@ public class ForecastFragment extends Fragment
             }
         });
 
-
         // We'll call our MainActivity
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
                     String locationSetting = mForecastPresenter.getPreferredLocation(getActivity());
-                    ((Callback) getActivity()).onItemSelected(mForecastPresenter.buildWeatherLocationWithDate(adapterView, position, locationSetting));
+                    ((Callback) getActivity()).onItemSelected(position, locationSetting);
 
                 mPosition = position;
             }
@@ -164,7 +154,6 @@ public class ForecastFragment extends Fragment
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        mForecastPresenter.initLoader(getActivity());
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -200,5 +189,10 @@ public class ForecastFragment extends Fragment
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void refreshListView() {
+        ((BaseAdapter)mListView.getAdapter()).notifyDataSetChanged();
     }
 }

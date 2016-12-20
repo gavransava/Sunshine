@@ -47,9 +47,9 @@ public class SettingsActivity extends AppCompatActivity
                 .build()
                 .inject(this);
 
-        mSettingsPresenter.getLocationValue(mSettingsPresenter);
-        mSettingsPresenter.getUnitValue(mSettingsPresenter);
-        mSettingsPresenter.getNotificationsValue(mSettingsPresenter);
+        mSettingsPresenter.getLocationValue(mSettingsPresenter, this);
+        mSettingsPresenter.getUnitValue(mSettingsPresenter, this);
+        mSettingsPresenter.getNotificationsValue(mSettingsPresenter, this);
     }
 
     private void wireEditText() {

@@ -17,9 +17,10 @@ public class DetailActivity extends ActionBarActivity {
             // using a fragment transaction.
 
             Bundle arguments = new Bundle();
-            arguments.putParcelable(DetailFragment.DETAIL_URI, getIntent().getData());
-
             DetailFragment fragment = new DetailFragment();
+            arguments.putInt(fragment.DETAIL_POSITION, getIntent().getIntExtra(fragment.DETAIL_POSITION, 0));
+            arguments.putString(fragment.DETAIL_LOCATION, getIntent().getStringExtra(fragment.DETAIL_LOCATION));
+
             fragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()

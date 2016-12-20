@@ -1,9 +1,7 @@
 package com.example.savagavran.sunshine.presenter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
-import android.widget.AdapterView;
 
 import com.example.savagavran.sunshine.ForecastAdapter;
 import com.example.savagavran.sunshine.RequiredView;
@@ -14,11 +12,6 @@ import java.lang.ref.WeakReference;
 public class ForecastFragmentPresenterImpl
         implements Presenter.ForecastPresenter {
 
-    @Override
-    public Uri buildWeatherLocationWithDate(AdapterView<?> adapterView, int position, String locationSetting) {
-        return mModel.buildWeatherLocationWithDate(adapterView, position, locationSetting);
-    }
-
     private WeakReference<RequiredView.ForecastViewOps> mView;
     private Model.ModelOps mModel;
 
@@ -27,10 +20,15 @@ public class ForecastFragmentPresenterImpl
         return mModel.getPreferredLocation(activity);
     }
 
+    @Override
+    public void getDetailData(int position, String location) {
+
+    }
+
     public ForecastFragmentPresenterImpl(RequiredView.ForecastViewOps view, Model.ModelOps model) {
         mView = new WeakReference<>(view);
         mModel = model;
-        mModel.setPresenter(this);
+        mModel.setForecastPresenter(this);
     }
 
     @Override
@@ -38,7 +36,7 @@ public class ForecastFragmentPresenterImpl
         RequiredView.ForecastViewOps temp;
         if (mView.get() != null) {
             temp = mView.get();
-            mModel.onLocationOrUnitChanged(context, temp.returnLoaderManager());
+            mModel.onLocationOrUnitChanged(context);
         }
     }
 
@@ -79,17 +77,6 @@ public class ForecastFragmentPresenterImpl
 
     }
 
-    @Override
-    public void initLoader(Context context) {
-        RequiredView.ForecastViewOps temp;
-
-        if (mView.get() != null) {
-            temp = mView.get();
-            mModel.initLoader(temp.returnLoaderManager(), context);
-        }
-    }
-
-
     public void setRetryLayoutVisibility(int gone) {
         RequiredView.ForecastViewOps temp;
 
@@ -105,6 +92,15 @@ public class ForecastFragmentPresenterImpl
         if (mView.get() != null) {
             temp = mView.get();
             temp.scrollToPosition();
+        }
+    }
+
+    public void refreshListView() {
+        RequiredView.ForecastViewOps temp;
+
+        if (mView.get() != null) {
+            temp = mView.get();
+            temp.refreshListView();
         }
     }
 }

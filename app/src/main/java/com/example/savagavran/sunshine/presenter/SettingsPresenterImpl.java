@@ -16,7 +16,7 @@ public class SettingsPresenterImpl
 
     @Override
     public void onUnitChanged(SettingsActivity settingsActivity) {
-        mModel.onLocationOrUnitChanged(settingsActivity, null);
+        mModel.onLocationOrUnitChanged(settingsActivity);
     }
 
     @Override
@@ -42,20 +42,20 @@ public class SettingsPresenterImpl
     }
 
     @Override
-    public void getLocationValue(Presenter.SettingsPresenter  presenter) {
-        String result = mModel.getLocationValue();
+    public void getLocationValue(Presenter.SettingsPresenter presenter, Context context) {
+        String result = mModel.getLocationValue(context);
         presenter.returnLocationValue(result);
     }
 
     @Override
-    public void getUnitValue(Presenter.SettingsPresenter  presenter) {
-        int result = mModel.getUnitValue();
+    public void getUnitValue(Presenter.SettingsPresenter presenter, Context context) {
+        int result = mModel.getUnitValue(context);
         presenter.returnUnitValue(result); // wont focus element
     }
 
     @Override
-    public void getNotificationsValue(Presenter.SettingsPresenter  presenter) {
-        boolean result = mModel.getNotificationsValue();
+    public void getNotificationsValue(Presenter.SettingsPresenter presenter, Context context) {
+        boolean result = mModel.getNotificationsValue(context);
         presenter.returnNotificationsValue(result);
     }
 

@@ -18,7 +18,7 @@ public class DetailFragmentModule {
     }
 
     @Provides
-    Presenter.DetailPresenter providedPresenterOps(Model.DetailModelOps model) {
+    Presenter.ForecastPresenter providedPresenterOps(Model.ModelOps model) {
         return new DetailFragmentPresenterImpl(detailFragment, model);
     }
 }

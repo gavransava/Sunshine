@@ -1,7 +1,6 @@
 package com.example.savagavran.sunshine;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -22,9 +21,6 @@ import com.example.savagavran.sunshine.presenter.Presenter;
 
 import javax.inject.Inject;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class DetailFragment extends Fragment
         implements RequiredView.DetailViewOps {
 
@@ -34,13 +30,13 @@ public class DetailFragment extends Fragment
     }
 
     private static final String LOG_TAG = DetailFragment.class.getSimpleName();
-    static final String DETAIL_URI = "URI";
+    public static final String DETAIL_POSITION = "POSITION";
+    public static final String DETAIL_LOCATION = "LOCATION";
 
     private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
 
     private ShareActionProvider mShareActionProvider;
     private String mForecast;
-    private Uri mUri;
 
     private ImageView mIconView;
     private TextView mFriendlyDateView;
@@ -52,8 +48,11 @@ public class DetailFragment extends Fragment
     private TextView mWindView;
     private TextView mPressureView;
 
+    private int mPosition;
+    private String mLocation;
+
     @Inject
-    Presenter.DetailPresenter mDetailPresenter;
+    Presenter.ForecastPresenter mForecastPresenter;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -64,7 +63,8 @@ public class DetailFragment extends Fragment
                              Bundle savedInstanceState) {
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
+            mPosition = arguments.getInt(DETAIL_POSITION);
+            mLocation = arguments.getString(DETAIL_LOCATION);
         }
 
         DaggerDetailFragmentComponent
@@ -85,6 +85,9 @@ public class DetailFragment extends Fragment
         mHumidityView = (TextView) rootView.findViewById(R.id.detail_humidity_textview);
         mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
         mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
+
+        mForecastPresenter.getDetailData(mPosition, mLocation);
+
         return rootView;
     }
 
@@ -115,7 +118,6 @@ public class DetailFragment extends Fragment
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        mDetailPresenter.initLoader(getActivity(), mUri);
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -142,10 +144,6 @@ public class DetailFragment extends Fragment
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(createShareForecastIntent());
         }
-    }
-
-    void onLocationChanged() {
-        mDetailPresenter.onLocationChanged();
     }
 }
 
